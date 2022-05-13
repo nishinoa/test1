@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "node realtime.js"
+  },
   "dependencies": {
     "moment": "^2.29.3"
   }
