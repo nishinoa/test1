@@ -2,17 +2,17 @@
 <html>
   <head>
     <base target="_top">
-    <script>
-      function countup(){
-        const textBox = document.getElementById('textbox');
-        textBox.value++;
-      }
-    </script>
   </head>
   <body>
     <form>
       <input type="text" id="textbox" value="0"><br>
-      <input type="button" id="up" value="+1" onclick="countup()">
+      <input type="button" id="up" value="+1" onclick="countUp()">
     </form>
+    <script>
+      function countUp(){
+        const textBox = document.getElementById('textbox');
+        textBox.value++;
+      }
+    </script>
   </body>
 </html>
