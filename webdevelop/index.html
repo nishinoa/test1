@@ -6,12 +6,16 @@
   <body>
     <form>
       <input type="text" id="textbox" value="0"><br>
-      <input type="button" id="up" value="+1" onclick="countUp()">
+      <input type="button" id="up" value="+1" onclick="countUp()"><br>
+      <input type="button" id="reset" value="リセット" onclick="reSet()">
     </form>
     <script>
+      const textBox = document.getElementById('textbox');
       function countUp(){
-        const textBox = document.getElementById('textbox');
         textBox.value++;
+      }
+      function reSet(){
+        textBox.value = 0;
       }
     </script>
   </body>
