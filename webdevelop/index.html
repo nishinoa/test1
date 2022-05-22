@@ -2,12 +2,32 @@
 <html>
   <head>
     <base target="_top">
+    <style>
+      .box {
+        text-align: center;
+      }
+      #textbox {
+        text-align: center;
+        height: 30px;
+      }
+      #up {
+        background-color: #fa8072;
+        width: 70px;
+      }
+      #reset {
+        background-color: #6495ed;
+        height: 25px;
+      }
+    </style>
   </head>
   <body>
     <form>
-      <input type="text" id="textbox" value="0"><br>
-      <input type="button" id="up" value="+1" onclick="countUp()"><br>
+      <div class="box">
+      <p>カウントアップアプリ</p>
+      <input type="text" id="textbox" value="0"><br><br>
+      <input type="button" id="up" value="+" onclick="countUp()"><br><br>
       <input type="button" id="reset" value="リセット" onclick="reSet()">
+      </div>
     </form>
     <script>
       const textBox = document.getElementById('textbox');
