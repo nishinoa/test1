@@ -14,6 +14,7 @@
       #up {
         background-color: #fa8072;
         width: 70px;
+        height: 25px;
         margin: 10px;
       }
       #reset {
@@ -21,14 +22,20 @@
         height: 25px;
         margin: 10px;
       }
+      #save {
+        background-color: #66cdaa;
+        width: 70px;
+        height: 25px;
+        margin: 10px;
+      }
     </style>
   </head>
-  <body>
+  <body onload="outputValue()">
     <form>
       <div class="box">
         <p>カウントアップアプリ</p>
        <div>
-        <input type="text" id="textbox" value="0" readonly>
+        <input type="text" id="textbox" readonly>
        </div>
        <div>
         <input type="button" id="up" value="+" onclick="countUp()">
@@ -36,15 +43,37 @@
        <div>
         <input type="button" id="reset" value="リセット" onclick="reSet()">
        </div>
+       <div>
+        <input type="button" id="save" value="保存" onclick="saveValue()">
+       </div>
       </div>
     </form>
     <script>
       const textBox = document.getElementById('textbox');
+
+      // テキストの値をカウントアップする
       function countUp(){
         textBox.value++;
       }
+
+      // テキストの値をリセットする
       function reSet(){
         textBox.value = 0;
+      }
+
+      // setSheetData()を呼び出す
+      function saveValue() {
+        google.script.run.setSheetData(textBox.value);
+      }
+
+      // getSheetData()を呼び出す
+      function outputValue() {
+        google.script.run.withSuccessHandler(getValue).getSheetData();
+      }
+
+      // スプレッドシートから取得した値をテキストに設定する
+      function getValue(result) {
+        textBox.value = result;
       }
     </script>
   </body>
