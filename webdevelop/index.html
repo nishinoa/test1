@@ -30,51 +30,54 @@
       }
     </style>
   </head>
-  <body onload="outputValue()">
+  <body> 
     <form>
-      <div class="box">
+      <div id="app" class="box"> 
         <p>カウントアップアプリ</p>
        <div>
-        <input type="text" id="textbox" readonly>
+        <input type="text" id="textbox" v-model="value" readonly>
        </div>
        <div>
-        <input type="button" id="up" value="+" onclick="countUp()">
+        <input type="button" id="up" value="+" v-on:click="countUp">
        </div>
        <div>
-        <input type="button" id="reset" value="リセット" onclick="reSet()">
+        <input type="button" id="reset" value="リセット" v-on:click="reSet">
        </div>
        <div>
-        <input type="button" id="save" value="保存" onclick="saveValue()">
+        <input type="button" id="save" value="保存" v-on:click="saveValue">
        </div>
       </div>
     </form>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script>
-      const textBox = document.getElementById('textbox');
+      const app = new Vue({
+        el: '#app',
+        data: {
+          value: null
+        },
+        mounted: function(){
+          // スプレッドシートから取得した値をテキストに設定する
+          google.script.run.withSuccessHandler(function(result) {
+            app.value = result;
+          }).getSheetData();
+        },
+        methods: {
+          // テキストの値をカウントアップする
+          countUp: function(){
+            this.value++;
+          },
 
-      // テキストの値をカウントアップする
-      function countUp(){
-        textBox.value++;
-      }
-
-      // テキストの値をリセットする
-      function reSet(){
-        textBox.value = 0;
-      }
-
-      // setSheetData()を呼び出す
-      function saveValue() {
-        google.script.run.setSheetData(textBox.value);
-      }
-
-      // getSheetData()を呼び出す
-      function outputValue() {
-        google.script.run.withSuccessHandler(getValue).getSheetData();
-      }
-
-      // スプレッドシートから取得した値をテキストに設定する
-      function getValue(result) {
-        textBox.value = result;
-      }
+          // テキストの値をリセットする
+          reSet: function(){
+            this.value = 0;
+          },
+          
+          // setSheetData()を呼び出す
+          saveValue: function(){
+            google.script.run.setSheetData(this.value);
+          },
+         }
+      })
     </script>
   </body>
 </html>
