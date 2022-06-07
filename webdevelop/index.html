@@ -53,28 +53,37 @@
       const app = new Vue({
         el: '#app',
         data: {
-          value: null
+          value: 0
         },
-        mounted: function(){
           // スプレッドシートから取得した値をテキストに設定する
-          google.script.run.withSuccessHandler(function(result) {
-            app.value = result;
+        created(){
+          try {
+            google.script.run.withSuccessHandler(function(result) {
+              app.value = result;
           }).getSheetData();
+          } catch(e) {
+            alert("データを取得出来ません。");
+          }
         },
         methods: {
           // テキストの値をカウントアップする
-          countUp: function(){
+          countUp(){
             this.value++;
           },
 
           // テキストの値をリセットする
-          reSet: function(){
+          reSet(){
             this.value = 0;
           },
           
           // setSheetData()を呼び出す
-          saveValue: function(){
-            google.script.run.setSheetData(this.value);
+          saveValue(){
+            try {
+              google.script.run.setSheetData(this.value);
+              alert("保存しました。");
+            } catch(e) {
+              alert("保存に失敗しました。");
+            }
           },
          }
       })
