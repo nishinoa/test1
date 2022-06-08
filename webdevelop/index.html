@@ -53,17 +53,15 @@
       const app = new Vue({
         el: '#app',
         data: {
-          value: 0
+          value: null
         },
           // スプレッドシートから取得した値をテキストに設定する
-        created(){
-          try {
-            google.script.run.withSuccessHandler(function(result) {
-              app.value = result;
-          }).getSheetData();
-          } catch(e) {
+        mounted(){
+          google.script.run.withSuccessHandler(function(result) {
+            app.value = result;
+          }).withFailureHandler(function(){
             alert("データを取得出来ません。");
-          }
+          }).getSheetData();
         },
         methods: {
           // テキストの値をカウントアップする
@@ -78,12 +76,11 @@
           
           // setSheetData()を呼び出す
           saveValue(){
-            try {
-              google.script.run.setSheetData(this.value);
+            google.script.run.withSuccessHandler(function() {
               alert("保存しました。");
-            } catch(e) {
+            }).withFailureHandler(function(){
               alert("保存に失敗しました。");
-            }
+            }).setSheetData(this.value);
           },
          }
       })
