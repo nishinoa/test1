@@ -2,56 +2,43 @@
 <html>
   <head>
     <base target="_top">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     <style>
-      .box {
+      .input-center input{
         text-align: center;
-      }
-      #textbox {
-        text-align: center;
-        height: 30px;
-        margin: 10px;
-      }
-      #up {
-        background-color: #fa8072;
-        width: 70px;
-        height: 25px;
-        margin: 10px;
-      }
-      #reset {
-        background-color: #6495ed;
-        height: 25px;
-        margin: 10px;
-      }
-      #save {
-        background-color: #66cdaa;
-        width: 70px;
-        height: 25px;
-        margin: 10px;
       }
     </style>
   </head>
   <body> 
     <form>
-      <div id="app" class="box"> 
-        <p>カウントアップアプリ</p>
-       <div>
-        <input type="text" id="textbox" v-model="value" readonly>
-       </div>
-       <div>
-        <input type="button" id="up" value="+" v-on:click="countUp">
-       </div>
-       <div>
-        <input type="button" id="reset" value="リセット" v-on:click="reSet">
-       </div>
-       <div>
-        <input type="button" id="save" value="保存" v-on:click="saveValue">
-       </div>
-      </div>
+      <v-app id="app">
+        <v-row justify="center" align-content="center"> 
+          <p>カウントアップアプリ</p>
+        </v-row>
+        <v-row justify="center" align-content="start">
+          <v-col cols="2">
+            <v-text-field v-model="value" class="input-center" readonly/>
+          </v-col>
+        </v-row>
+        <v-row justify="center" align-content="start">
+          <v-btn v-on:click="countUp" width="4" color="red">+</v-btn>
+        </v-row>
+        <v-row justify="center" align-content="start">
+          <v-btn v-on:click="reSet" width="4" color="blue">リセット</v-btn>
+        </v-row>
+        <v-row justify="center" align-content="start">
+          <v-btn v-on:click="saveValue" width="4" color="green">保存</v-btn>
+        </v-row>
+      </v-app>
     </form>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.6/dist/vuetify.js"></script>
     <script>
       const app = new Vue({
         el: '#app',
+        vuetify: new Vuetify(),
         data: {
           value: null
         },
