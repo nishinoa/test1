@@ -1,5 +1,5 @@
 CREATE TABLE web_counter_nishinoa(
-	id NUMBER(6,0),
-	counter NUMBER(6,0),
+	id INT(6) not null,
+	counter INT(6),
 	primary key(id)
 );
