@@ -52,19 +52,17 @@ function selectRecord() {
   const count = results.getRow();
   results.beforeFirst();
   if (count === 0) {
-    return null;
-
     results.close();
     statement.close();
     connection.close();
+    return null;
   } else {
     results.next();
     const counter = results.getInt('counter');
-    return counter;
-
     results.close();
     statement.close();
     connection.close();
+    return counter;
   }
 }  
 
