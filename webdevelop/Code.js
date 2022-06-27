@@ -30,13 +30,12 @@ const url = 'jdbc:google:mysql://' + instance + '/' + database;
 
 // カウント結果保存
 function saveCounter(value) {
-  //const counter = selectRecord();
-  //if (counter == null) {
-  //  insertRecord(value);
-  //} else {
-  //  updateRecord(value);
-  //}
-  insertUpdateRecord(value);
+  const counter = selectRecord();
+  if (counter == null) {
+    insertRecord(value);
+  } else {
+    updateRecord(value);
+  }
 }
 
 // レコード取得
