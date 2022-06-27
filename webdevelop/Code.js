@@ -30,12 +30,13 @@ const url = 'jdbc:google:mysql://' + instance + '/' + database;
 
 // カウント結果保存
 function saveCounter(value) {
-  const counter = selectRecord();
-  if (counter == null) {
-    insertRecord(value);
-  } else {
-    updateRecord(value);
-  }
+  //const counter = selectRecord();
+  //if (counter == null) {
+  //  insertRecord(value);
+  //} else {
+  //  updateRecord(value);
+  //}
+  insertUpdateRecord(value);
 }
 
 // レコード取得
@@ -94,6 +95,25 @@ function updateRecord(value) {
   const statement = connection.prepareStatement(sql);
   statement.setInt(1, value);
   statement.setInt(2, 999999);
+  statement.executeUpdate();
+  
+  statement.close();
+  connection.close();
+}
+
+// レコード登録・更新
+function insertUpdateRecord(value) {
+  const connection = Jdbc.getCloudSqlConnection(url, userName, password);
+  let sql = "";
+  sql += "INSERT INTO ";
+  sql += "web_counter_nishinoa ";
+  sql += "(id, counter) ";
+  sql += "VALUES (?, ?) ";
+  sql += "ON DUPLICATE KEY UPDATE counter=? ";
+  const statement = connection.prepareStatement(sql);
+  statement.setInt(1, 999999);
+  statement.setInt(2, value);
+  statement.setInt(3, value);
   statement.executeUpdate();
   
   statement.close();
