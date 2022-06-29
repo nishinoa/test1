@@ -42,13 +42,17 @@
         data: {
           value: null
         },
-          // スプレッドシートから取得した値をテキストに設定する
+          // DBから取得した値をテキストに設定する
         mounted(){
           google.script.run.withSuccessHandler(function(result) {
-            app.value = result;
+            if (result == null){
+              app.value = 0;
+            } else {  
+              app.value = result;
+            }
           }).withFailureHandler(function(){
             alert("データを取得出来ません。");
-          }).getSheetData();
+          }).selectRecord();
         },
         methods: {
           // テキストの値をカウントアップする
@@ -61,13 +65,13 @@
             this.value = 0;
           },
           
-          // setSheetData()を呼び出す
+          // insertUpdateRecord()を呼び出す
           saveValue(){
             google.script.run.withSuccessHandler(function() {
               alert("保存しました。");
             }).withFailureHandler(function(){
               alert("保存に失敗しました。");
-            }).setSheetData(this.value);
+            }).insertUpdateRecord(this.value);
           },
          }
       })
