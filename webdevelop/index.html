@@ -47,8 +47,8 @@
           isLoading: true
         },
           // DBから取得した値をテキストに設定する
-        mounted(){
-          google.script.run.withSuccessHandler(function(result) {
+        async mounted(){
+          await google.script.run.withSuccessHandler(function(result) {
             if (result == null){
               app.value = 0;
             } else {  
