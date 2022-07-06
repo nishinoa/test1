@@ -54,12 +54,10 @@
             } else {  
               app.value = result;
             }
-            setTimeout(() => {
-              app.isLoading = false;
-            }, 1000)
           }).withFailureHandler(function(){
             alert("データを取得出来ません。");
           }).selectRecord();
+          this.isLoading = false;
         },
         methods: {
           // テキストの値をカウントアップする
