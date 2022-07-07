@@ -31,6 +31,9 @@
         <v-row justify="center" align-content="start">
           <v-btn v-on:click="saveValue" width="4" color="green">保存</v-btn>
         </v-row>
+        <v-overlay :value="isLoading">
+          <v-progress-circular indeterminate size="64"/>
+        </v-overlay>
       </v-app>
     </form>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
@@ -40,11 +43,12 @@
         el: '#app',
         vuetify: new Vuetify(),
         data: {
-          value: null
+          value: null,
+          isLoading: true
         },
           // DBから取得した値をテキストに設定する
-        mounted(){
-          google.script.run.withSuccessHandler(function(result) {
+        async mounted(){
+          await google.script.run.withSuccessHandler(function(result) {
             if (result == null){
               app.value = 0;
             } else {  
@@ -53,6 +57,7 @@
           }).withFailureHandler(function(){
             alert("データを取得出来ません。");
           }).selectRecord();
+          this.isLoading = false;
         },
         methods: {
           // テキストの値をカウントアップする
