@@ -118,3 +118,18 @@ function insertUpdateRecord(value) {
   statement.close();
   connection.close();
 }
+
+// レコード削除
+function deleteRecord() {
+  const connection = Jdbc.getCloudSqlConnection(url, userName, password);
+  let sql = "";
+  sql += "DELETE FROM ";
+  sql += "web_counter_nishinoa ";
+  sql += "WHERE id=? ";
+  const statement = connection.prepareStatement(sql);
+  statement.setInt(1, 999999);
+  statement.executeUpdate();
+  
+  statement.close();
+  connection.close();
+}
