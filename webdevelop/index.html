@@ -31,6 +31,9 @@
         <v-row justify="center" align-content="start">
           <v-btn v-on:click="saveValue" width="4" color="green">保存</v-btn>
         </v-row>
+        <v-row justify="center" align-content="start">
+          <v-btn v-on:click="deleteValue" width="4" color="yellow">削除</v-btn>
+        </v-row>
         <v-overlay :value="isLoading">
           <v-progress-circular indeterminate size="64"/>
         </v-overlay>
@@ -77,6 +80,23 @@
             }).withFailureHandler(function(){
               alert("保存に失敗しました。");
             }).insertUpdateRecord(this.value);
+          },
+
+          // deleteRecord()を呼び出す
+          deleteValue(){
+            google.script.run.withSuccessHandler(function(result) {
+              if (result == null){
+                alert("保存情報はありません。");
+              } else {  
+                google.script.run.withSuccessHandler(function() {
+                  alert("削除しました。");
+                }).withFailureHandler(function(){
+                  alert("削除に失敗しました。");
+                }).deleteRecord();
+              }
+            }).withFailureHandler(function(){
+              alert("データを取得出来ません。");
+            }).selectRecord();
           },
          }
       })
