@@ -3,5 +3,6 @@ CREATE TABLE web_book_nishinoa(
 	category VARCHAR(30) not null,
 	purchase_date DATE not null,
 	buyer VARCHAR(30) not null,
-	review_content VARCHAR(30) not null
+	review_content VARCHAR(30) not null,
+	primary key(title,category,purchase_date,buyer)
 );
