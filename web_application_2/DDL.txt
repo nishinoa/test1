@@ -1,8 +1,7 @@
 CREATE TABLE web_book_nishinoa(
 	title VARCHAR(30) not null,
-	genre VARCHAR(30) not null,
-	purchase date DATE(8) not null,
+	category VARCHAR(30) not null,
+	purchase_date DATE not null,
 	buyer VARCHAR(30) not null,
-	review content VARCHAR(30),
-	primary key(title)
+	review_content VARCHAR(30) not null
 );
