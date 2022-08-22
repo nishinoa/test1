@@ -6,8 +6,9 @@
         v-model="searchCategory"
         :items="bookList"
         item-text="category"
+        item-value="category"
         label="ジャンル検索"
-        ></v-select>
+       />
       <v-btn @click="onClickSearchBtn">検索</v-btn>
       <v-btn @click="onClickAddBtn">新規登録</v-btn>
     </v-card-title>
@@ -43,7 +44,7 @@
                       >
                         <template #activator="{ on, attrs }" >
                           <v-text-field
-                            v-model="textDate"
+                            v-model="dialogBookList.purchase_date"
                             label="購入日"
                             prepend-icon="mdi-calendar"
                             readonly
@@ -54,12 +55,11 @@
                             v-model="pickerDate"
                             no-title
                             scrollable
-                            @input="formatDate(pickerDate)
+                            @input="dialogBookList.purchase_date = pickerDate
                             $refs.menu.save(pickerDate)
                             menu = false
                             "
-                          >
-                          </v-date-picker>
+                           />
                       </v-menu>
                     </v-col>
                     <v-col cols="6">
@@ -83,19 +83,19 @@
           <v-card>
             <v-card-title class="text-h5">削除しますか?</v-card-title>
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
               <v-btn @click="closeDeleteDialog">キャンセル</v-btn>
               <v-btn @click="onClickDeleteBtn">削除</v-btn>
-              <v-spacer></v-spacer>
+              <v-spacer />
             </v-card-actions>
           </v-card>
         </v-dialog>
       </template>
       <template>
-        <td>{{ bookList.title }}</td>
-        <td>{{ bookList.category }}</td>
-        <td>{{ bookList.purchase_date }}</td>
-        <td>{{ bookList.buyer }}</td>
+        {{ bookList.title }}
+        {{ bookList.category }}
+        {{ bookList.purchase_date }}
+        {{ bookList.buyer }}
       </template>
       <template v-slot:[`item.edit-action`]="{ item }">
         <v-icon @click="onClickEditIcon(item)">mdi-pencil</v-icon>
@@ -124,9 +124,9 @@ export default {
         { text: '削除', align: 'center', value: 'delete-action' }
       ],
       bookList: [
-        { title: '今夜は眠れない', category: 'ミステリー', purchase_date: 20220810, buyer: '山田太郎', review_content: '面白い' },
-        { title: 'もものかんづめ', category: 'エッセイ', purchase_date: 20220910, buyer: '佐藤次郎', review_content: '普通' },
-        { title: '王さまロボット', category: 'ファンタジー', purchase_date: 20221010, buyer: '鈴木一郎', review_content: '感動した' }
+        { title: '今夜は眠れない', category: 'ミステリー', purchase_date: '2022-08-10', buyer: '山田太郎', review_content: '面白い' },
+        { title: 'もものかんづめ', category: 'エッセイ', purchase_date: '2022-09-10', buyer: '佐藤次郎', review_content: '普通' },
+        { title: '王さまロボット', category: 'ファンタジー', purchase_date: '2022-10-10', buyer: '鈴木一郎', review_content: '感動した' }
       ],
       dialogBookList: {},
       isShowDialog: false,
@@ -134,9 +134,8 @@ export default {
       searchTitle: '',
       searchCategory: '',
       menu: false,
-      textDate: '',
       pickerDate: '',
-      isLoading: true
+      isLoading: false
     }
   },
   mounted () {
@@ -152,19 +151,17 @@ export default {
     this.isLoading = false
   },
   methods: {
-    onClickEditIcon (bookList) {
-      this.dialogBookList = Object.assign({}, bookList)
+    onClickEditIcon (book) {
+      this.dialogBookList = Object.assign({}, book)
       this.isShowDialog = true
-      this.textDate = this.dialogBookList.purchase_date
     },
-    onClickDeleteIcon (bookList) {
-      this.dialogBookList = Object.assign({}, bookList)
+    onClickDeleteIcon (book) {
+      this.dialogBookList = Object.assign({}, book)
       this.isShowDeleteDialog = true
     },
     onClickAddBtn () {
       this.dialogBookList = {}
       this.isShowDialog = true
-      this.textDate = this.dialogBookList.purchase_date
     },
     closeDialog () {
       this.dialogBookList = {}
@@ -195,10 +192,6 @@ export default {
       // }).withFailureHandler(function () {
       //  alert('検索に失敗しました。')
       // }).selectRecord(searchTitle,searchCategory)
-    },
-    formatDate (date) {
-      const [year, month, day] = date.split('-')
-      this.textDate = `${year}${month}${day}`
     }
   }
 }
