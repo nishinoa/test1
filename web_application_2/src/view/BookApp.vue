@@ -27,10 +27,10 @@
                 <v-container>
                   <v-row>
                     <v-col cols="6">
-                      <v-text-field v-model="dialogBookList.title" label="タイトル" />
+                      <v-text-field v-model="dialogBook.title" label="タイトル" />
                     </v-col>
                     <v-col cols="6">
-                      <v-text-field v-model="dialogBookList.category" label="ジャンル" />
+                      <v-text-field v-model="dialogBook.category" label="ジャンル" />
                     </v-col>
                     <v-col cols="6">
                       <v-menu
@@ -44,7 +44,7 @@
                       >
                         <template #activator="{ on, attrs }" >
                           <v-text-field
-                            v-model="dialogBookList.purchase_date"
+                            v-model="dialogBook.purchase_date"
                             label="購入日"
                             prepend-icon="mdi-calendar"
                             readonly
@@ -55,7 +55,7 @@
                             v-model="pickerDate"
                             no-title
                             scrollable
-                            @input="dialogBookList.purchase_date = pickerDate
+                            @input="dialogBook.purchase_date = pickerDate
                             $refs.menu.save(pickerDate)
                             menu = false
                             "
@@ -63,10 +63,10 @@
                       </v-menu>
                     </v-col>
                     <v-col cols="6">
-                      <v-text-field v-model="dialogBookList.buyer" label="購入者" />
+                      <v-text-field v-model="dialogBook.buyer" label="購入者" />
                     </v-col>
                     <v-col cols="12">
-                      <v-text-field v-model="dialogBookList.review_content" label="レビュー内容" />
+                      <v-text-field v-model="dialogBook.review_content" label="レビュー内容" />
                     </v-col>
                   </v-row>
                 </v-container>
@@ -122,7 +122,7 @@ export default {
         { title: 'もものかんづめ', category: 'エッセイ', purchase_date: '2022-09-10', buyer: '佐藤次郎', review_content: '普通' },
         { title: '王さまロボット', category: 'ファンタジー', purchase_date: '2022-10-10', buyer: '鈴木一郎', review_content: '感動した' }
       ],
-      dialogBookList: {},
+      dialogBook: {},
       isShowDialog: false,
       isShowDeleteDialog: false,
       searchTitle: '',
@@ -135,7 +135,7 @@ export default {
   mounted () {
     // await google.script.run.withSuccessHandler(function(result) {
     //  if (result == null){
-    //    app.bookList = {}
+    //    app.bookList = []
     //  } else {
     //    app.bookList = result
     //  }
@@ -145,23 +145,23 @@ export default {
   },
   methods: {
     onClickEditIcon (book) {
-      this.dialogBookList = Object.assign({}, book)
+      this.dialogBook = Object.assign({}, book)
       this.isShowDialog = true
     },
     onClickDeleteIcon (book) {
-      this.dialogBookList = Object.assign({}, book)
+      this.dialogBook = Object.assign({}, book)
       this.isShowDeleteDialog = true
     },
     onClickAddBtn () {
-      this.dialogBookList = {}
+      this.dialogBook = {}
       this.isShowDialog = true
     },
     closeDialog () {
-      this.dialogBookList = {}
+      this.dialogBook = {}
       this.isShowDialog = false
     },
     closeDeleteDialog () {
-      this.dialogBookList = {}
+      this.dialogBook = {}
       this.isShowDeleteDialog = false
     },
     onClickInsertUpdateBtn () {
@@ -169,7 +169,7 @@ export default {
       //  alert('更新しました。')
       // }).withFailureHandler(function () {
       //  alert('更新に失敗しました。')
-      // }).insertUpdateRecord(this.dialogBookList)
+      // }).insertUpdateRecord(this.dialogBook)
       this.closeDialog()
     },
     onClickDeleteBtn () {
@@ -177,7 +177,7 @@ export default {
       //  alert('削除しました。')
       // }).withFailureHandler(function () {
       //  alert('削除に失敗しました。')
-      // }).DeleteRecord(this.dialogBookList)
+      // }).DeleteRecord(this.dialogBook)
       this.closeDeleteDialog()
     },
     onClickSearchBtn () {
