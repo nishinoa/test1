@@ -37,7 +37,7 @@
                         ref="menu"
                         v-model="menu"
                         :close-on-content-click="false"
-                        :return-value.sync="pickerDate"
+                        :return-value.sync="dialogBook.purchase_date"
                         transition="scale-transition"
                         offset-y
                         min-width="auto"
@@ -52,11 +52,10 @@
                             v-on="on" />
                         </template>
                           <v-date-picker
-                            v-model="pickerDate"
+                            v-model="dialogBook.purchase_date"
                             no-title
                             scrollable
-                            @input="dialogBook.purchase_date = pickerDate
-                            $refs.menu.save(pickerDate)
+                            @input="$refs.menu.save(dialogBook.purchase_date)
                             menu = false
                             "
                            />
@@ -128,7 +127,6 @@ export default {
       searchTitle: '',
       searchCategory: '',
       menu: false,
-      pickerDate: '',
       isLoading: false
     }
   },
