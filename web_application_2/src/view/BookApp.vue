@@ -91,12 +91,6 @@
           </v-card>
         </v-dialog>
       </template>
-      <template>
-        {{ bookList.title }}
-        {{ bookList.category }}
-        {{ bookList.purchase_date }}
-        {{ bookList.buyer }}
-      </template>
       <template v-slot:[`item.edit-action`]="{ item }">
         <v-icon @click="onClickEditIcon(item)">mdi-pencil</v-icon>
       </template>
@@ -148,7 +142,6 @@ export default {
     // }).withFailureHandler(function(){
     //    alert("データを取得出来ません。")
     // }).selectAllRecord()
-    this.isLoading = false
   },
   methods: {
     onClickEditIcon (book) {
@@ -168,6 +161,7 @@ export default {
       this.isShowDialog = false
     },
     closeDeleteDialog () {
+      this.dialogBookList = {}
       this.isShowDeleteDialog = false
     },
     onClickInsertUpdateBtn () {
