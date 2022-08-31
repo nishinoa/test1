@@ -5,12 +5,31 @@
       :searchCategory="searchCategory"
       :searchTitle="searchTitle"
       @onClickSearchBtn="onClickSearchBtn"
-    >
-    </search-template>
+     />
+    <v-btn @click="onClickAddBtn">新規登録</v-btn>
     <list-template
       :bookList="bookList"
-    >
-    </list-template>
+      @onClickEditIcon="onClickEditIcon"
+      @onClickDeleteIcon="onClickDeleteIcon"
+     />
+    <v-dialog v-model="isShowDialog" max-width="500px">
+     <form-template
+          :dialogBook="dialogBook"
+          @closeDialog="closeDialog"
+          @onClickInsertUpdateBtn="onClickInsertUpdateBtn"
+      />
+    </v-dialog>
+    <v-dialog v-model="isShowDeleteDialog" max-width="500px">
+     <v-card>
+       <v-card-title class="text-h5">削除しますか?</v-card-title>
+       <v-card-actions>
+         <v-spacer />
+         <v-btn @click="closeDeleteDialog">キャンセル</v-btn>
+         <v-btn @click="onClickDeleteBtn">削除</v-btn>
+         <v-spacer />
+       </v-card-actions>
+     </v-card>
+    </v-dialog>
     <v-overlay :value="isLoading">
       <v-progress-circular indeterminate size="64"/>
     </v-overlay>
@@ -18,11 +37,13 @@
 </template>
 
 <script>
+import Form from '../components/Form'
 import List from '../components/List'
 import Search from '../components/Search'
 
 export default {
   components: {
+    'form-template': Form,
     'list-template': List,
     'search-template': Search
   },
@@ -33,6 +54,9 @@ export default {
         { title: 'もものかんづめ', category: 'エッセイ', purchase_date: '2022-09-10', buyer: '佐藤次郎', review_content: '普通' },
         { title: '王さまロボット', category: 'ファンタジー', purchase_date: '2022-10-10', buyer: '鈴木一郎', review_content: '感動した' }
       ],
+      dialogBook: {},
+      isShowDialog: false,
+      isShowDeleteDialog: false,
       searchTitle: '',
       searchCategory: '',
       isLoading: false
@@ -50,6 +74,40 @@ export default {
     // }).selectAllRecord()
   },
   methods: {
+    onClickEditIcon (dialogBook) {
+      this.dialogBook = dialogBook
+      this.isShowDialog = true
+    },
+    onClickDeleteIcon (dialogBook) {
+      this.dialogBook = dialogBook
+      this.isShowDeleteDialog = true
+    },
+    onClickAddBtn () {
+      this.dialogBook = {}
+      this.isShowDialog = true
+    },
+    closeDialog () {
+      this.isShowDialog = false
+    },
+    closeDeleteDialog () {
+      this.isShowDeleteDialog = false
+    },
+    onClickInsertUpdateBtn (dialogBook) {
+      // await google.script.run.withSuccessHandler(function () {
+      //  alert('更新しました。')
+      // }).withFailureHandler(function () {
+      //  alert('更新に失敗しました。')
+      // }).insertUpdateRecord(dialogBook)
+      this.closeDialog()
+    },
+    onClickDeleteBtn (deleteDialogBook) {
+      // await google.script.run.withSuccessHandler(function () {
+      //  alert('削除しました。')
+      // }).withFailureHandler(function () {
+      //  alert('削除に失敗しました。')
+      // }).DeleteRecord(deleteDialogBook)
+      this.closeDeleteDialog()
+    },
     onClickSearchBtn (searchTitle, searchCategory) {
       // await google.script.run.withSuccessHandler(function () {
       //  alert('更新しました。')
