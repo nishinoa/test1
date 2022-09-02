@@ -14,9 +14,9 @@
      />
     <v-dialog v-model="isShowDialog" max-width="500px">
      <form-template
-          :dialogBook="dialogBook"
-          @closeDialog="closeDialog"
-          @onClickInsertUpdateBtn="onClickInsertUpdateBtn"
+       :dialogBook="dialogBook"
+       @closeDialog="closeDialog"
+       @onClickInsertUpdateBtn="onClickInsertUpdateBtn"
       />
     </v-dialog>
     <v-dialog v-model="isShowDeleteDialog" max-width="500px">

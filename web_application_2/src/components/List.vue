@@ -29,18 +29,15 @@ export default {
         { text: '購入者', align: 'center', value: 'buyer' },
         { text: '編集', align: 'center', value: 'edit-action' },
         { text: '削除', align: 'center', value: 'delete-action' }
-      ],
-      dialogBook: {}
+      ]
     }
   },
   methods: {
     onClickEditIcon (book) {
-      this.dialogBook = Object.assign({}, book)
-      this.$emit('onClickEditIcon', this.dialogBook)
+      this.$emit('onClickEditIcon', Object.assign({}, book))
     },
     onClickDeleteIcon (book) {
-      this.dialogBook = Object.assign({}, book)
-      this.$emit('onClickDeleteIcon', this.dialogBook)
+      this.$emit('onClickDeleteIcon', Object.assign({}, book))
     }
   }
 }
