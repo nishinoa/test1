@@ -16,7 +16,7 @@
      <form-template
        :dialogBook="dialogBook"
        @closeDialog="closeDialog"
-       @onClickInsertUpdateBtn="onClickInsertUpdateBtn"
+       @onClickSaveBtn="onClickSaveBtn"
       />
     </v-dialog>
     <v-dialog v-model="isShowDeleteDialog" max-width="500px">
@@ -26,6 +26,16 @@
          <v-spacer />
          <v-btn @click="closeDeleteDialog">キャンセル</v-btn>
          <v-btn @click="onClickDeleteBtn">削除</v-btn>
+         <v-spacer />
+       </v-card-actions>
+     </v-card>
+    </v-dialog>
+    <v-dialog v-model="isShowErrorDialog" max-width="500px">
+     <v-card>
+       <v-card-title class="text-h5">未入力項目があります</v-card-title>
+       <v-card-actions>
+         <v-spacer />
+         <v-btn @click="closeErrorDialog">閉じる</v-btn>
          <v-spacer />
        </v-card-actions>
      </v-card>
@@ -54,9 +64,11 @@ export default {
         { title: 'もものかんづめ', category: 'エッセイ', purchase_date: '2022-09-10', buyer: '佐藤次郎', review_content: '普通' },
         { title: '王さまロボット', category: 'ファンタジー', purchase_date: '2022-10-10', buyer: '鈴木一郎', review_content: '感動した' }
       ],
-      dialogBook: {},
+      beforeDialogBook: {},
+      dialogBook: { title: '', category: '', purchase_date: '', buyer: '', review_content: '' },
       isShowDialog: false,
       isShowDeleteDialog: false,
+      isShowErrorDialog: false,
       searchTitle: '',
       searchCategory: '',
       isLoading: false
@@ -75,6 +87,9 @@ export default {
   },
   methods: {
     onClickEditIcon (dialogBook) {
+      if (this.isShowDialog === false) {
+        this.beforeDialogBook = dialogBook
+      }
       this.dialogBook = dialogBook
       this.isShowDialog = true
     },
@@ -83,22 +98,46 @@ export default {
       this.isShowDeleteDialog = true
     },
     onClickAddBtn () {
+      this.beforeDialogBook = {}
       this.dialogBook = {}
       this.isShowDialog = true
     },
     closeDialog () {
+      this.beforeDialogBook = {}
       this.isShowDialog = false
     },
     closeDeleteDialog () {
       this.isShowDeleteDialog = false
     },
-    onClickInsertUpdateBtn (dialogBook) {
-      // await google.script.run.withSuccessHandler(function () {
-      //  alert('更新しました。')
-      // }).withFailureHandler(function () {
-      //  alert('更新に失敗しました。')
-      // }).insertUpdateRecord(dialogBook)
-      this.closeDialog()
+    closeErrorDialog () {
+      this.isShowErrorDialog = false
+    },
+    async onClickSaveBtn (dialogBook) {
+      this.dialogBook = dialogBook
+      if (this.dialogBook.title === undefined || this.dialogBook.title === '' ||
+          this.dialogBook.category === undefined || this.dialogBook.category === '' ||
+          this.dialogBook.purchase_date === undefined || this.dialogBook.purchase_date === '' ||
+          this.dialogBook.buyer === undefined || this.dialogBook.buyer === '' ||
+          this.dialogBook.review_content === undefined || this.dialogBook.review_content === ''
+      ) {
+        this.isShowErrorDialog = true
+      } else {
+        const google = window.google
+        if (Object.keys(this.beforeDialogBook).length === 0) {
+          await google.script.run.withSuccessHandler(function () {
+            alert('登録しました。')
+          }).withFailureHandler(function () {
+            alert('登録に失敗しました。')
+          }).insertRecord(this.dialogBook)
+        } else {
+          await google.script.run.withSuccessHandler(function () {
+            alert('更新しました。')
+          }).withFailureHandler(function () {
+            alert('更新に失敗しました。')
+          }).updateRecord(this.beforeDialogBook, this.dialogBook)
+        }
+        this.closeDialog()
+      }
     },
     onClickDeleteBtn (deleteDialogBook) {
       // await google.script.run.withSuccessHandler(function () {

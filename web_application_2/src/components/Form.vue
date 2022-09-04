@@ -54,7 +54,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn @click="closeDialog">閉じる</v-btn>
-        <v-btn @click="onClickInsertUpdateBtn">保存</v-btn>
+        <v-btn @click="onClickSaveBtn">保存</v-btn>
         <v-spacer />
       </v-card-actions>
     </v-card>
@@ -75,8 +75,8 @@ export default {
     closeDialog () {
       this.$emit('closeDialog')
     },
-    onClickInsertUpdateBtn () {
-      this.$emit('onClickInsertUpdateBtn', this.dialogBook)
+    onClickSaveBtn () {
+      this.$emit('onClickSaveBtn', this.dialogBook)
     }
   }
 }

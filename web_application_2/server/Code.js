@@ -1,5 +1,7 @@
 import doGet from './functions/doGet'
-import sample from './functions/sample'
+import insertRecord from './functions/insertRecord'
+import updateRecord from './functions/updateRecord'
 
 global.doGet = doGet
-global.sample = sample
+global.insertRecord = insertRecord
+global.updateRecord = updateRecord
