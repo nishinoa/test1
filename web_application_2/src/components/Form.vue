@@ -58,6 +58,19 @@
         <v-spacer />
       </v-card-actions>
     </v-card>
+    <v-dialog v-model="isShowErrorDialog" max-width="500px">
+     <v-card>
+       <v-card-title class="text-h5">未入力項目があります</v-card-title>
+       <v-card-actions>
+         <v-spacer />
+         <v-btn @click="closeErrorDialog">閉じる</v-btn>
+         <v-spacer />
+       </v-card-actions>
+     </v-card>
+    </v-dialog>
+    <v-overlay :value="isLoading">
+      <v-progress-circular indeterminate size="64"/>
+    </v-overlay>
   </div>
 </template>
 
@@ -68,15 +81,28 @@ export default {
   ],
   data () {
     return {
-      menu: false
+      menu: false,
+      isShowErrorDialog: false,
+      isLoading: false
     }
   },
   methods: {
     closeDialog () {
       this.$emit('closeDialog')
     },
+    closeErrorDialog () {
+      this.isShowErrorDialog = false
+    },
     onClickSaveBtn () {
-      this.$emit('onClickSaveBtn', this.dialogBook)
+      if (!this.dialogBook.title || !this.dialogBook.category ||
+          !this.dialogBook.purchase_date || !this.dialogBook.buyer ||
+          !this.dialogBook.review_content
+      ) {
+        this.isShowErrorDialog = true
+      } else {
+        this.$emit('onClickSaveBtn', this.dialogBook)
+        this.isLoading = true
+      }
     }
   }
 }
