@@ -14,7 +14,9 @@
      />
     <v-dialog v-model="isShowDialog" max-width="500px">
       <form-template
+        :beforeDialogBook="beforeDialogBook"
         :dialogBook="dialogBook"
+        :insertResult="insertResult"
         @closeDialog="closeDialog"
         @onClickSaveBtn="onClickSaveBtn"
        />
@@ -60,7 +62,8 @@ export default {
       isShowDeleteDialog: false,
       searchTitle: '',
       searchCategory: '',
-      isLoading: false
+      isLoading: false,
+      insertResult: ''
     }
   },
   mounted () {
@@ -76,9 +79,7 @@ export default {
   },
   methods: {
     onClickEditIcon (dialogBook) {
-      if (this.isShowDialog === false) {
-        this.beforeDialogBook = dialogBook
-      }
+      this.beforeDialogBook = dialogBook
       this.dialogBook = dialogBook
       this.isShowDialog = true
     },
@@ -98,22 +99,26 @@ export default {
       this.isShowDeleteDialog = false
     },
     async onClickSaveBtn (dialogBook) {
-      this.dialogBook = dialogBook
       const google = window.google
+      const app = this
       if (Object.keys(this.beforeDialogBook).length === 0) {
-        await google.script.run.withSuccessHandler(function () {
-          alert('登録しました。')
+        await google.script.run.withSuccessHandler(function (result) {
+          if (result === 1) {
+            alert('登録しました。')
+            app.closeDialog()
+          } else {
+            app.insertResult = result
+          }
         }).withFailureHandler(function () {
           alert('登録に失敗しました。')
-        }).insertRecord(this.dialogBook)
-      } else {
-        await google.script.run.withSuccessHandler(function () {
-          alert('更新しました。')
-        }).withFailureHandler(function () {
-          alert('更新に失敗しました。')
-        }).updateRecord(this.beforeDialogBook, this.dialogBook)
+        }).insertRecord(dialogBook)
+      //  } else {
+      //  await google.script.run.withSuccessHandler(function () {
+      //    alert('更新しました。')
+      //  }).withFailureHandler(function () {
+      //    alert('更新に失敗しました。')
+      //  }).updateRecord(this.beforeDialogBook, dialogBook)
       }
-      this.closeDialog()
     },
     onClickDeleteBtn (deleteDialogBook) {
       // await google.script.run.withSuccessHandler(function () {
