@@ -71,26 +71,6 @@
         <v-spacer />
       </v-card-actions>
     </v-card>
-    <v-dialog v-model="isShowErrorDialog" max-width="500px">
-     <v-card>
-       <v-card-title class="text-h5">未入力項目があります</v-card-title>
-       <v-card-actions>
-         <v-spacer />
-         <v-btn @click="closeErrorDialog">閉じる</v-btn>
-         <v-spacer />
-       </v-card-actions>
-     </v-card>
-    </v-dialog>
-    <v-dialog v-model="isShowKeyDuplicateErrorDialog" max-width="500px">
-     <v-card>
-       <v-card-title class="text-h5">既に登録済みのデータです</v-card-title>
-       <v-card-actions>
-         <v-spacer />
-         <v-btn @click="closeKeyDuplicateErrorDialog">閉じる</v-btn>
-         <v-spacer />
-       </v-card-actions>
-     </v-card>
-    </v-dialog>
     <v-overlay :value="isSaveLoading">
       <v-progress-circular indeterminate size="64"/>
     </v-overlay>
@@ -127,13 +107,13 @@ export default {
           !this.dialogBook.purchase_date || !this.dialogBook.buyer ||
           !this.dialogBook.review_content
       ) {
-        this.isShowErrorDialog = true
+        window.alert('未入力項目があります')
         return
       }
       this.isSaveLoading = true
       await this.$emit('onClickSaveBtn', this.dialogBook)
       if (this.insertResult == null) {
-        this.isShowKeyDuplicateErrorDialog = true
+        window.alert('既に登録済みのデータです')
       }
       this.isSaveLoading = false
     }

@@ -67,6 +67,7 @@ export default {
     }
   },
   mounted () {
+    this.isLoading = true
     // await google.script.run.withSuccessHandler(function(result) {
     //  if (result == null){
     //    app.bookList = []
@@ -76,6 +77,7 @@ export default {
     // }).withFailureHandler(function(){
     //    alert("データを取得出来ません。")
     // }).selectAllRecord()
+    this.isLoading = false
   },
   methods: {
     onClickEditIcon (dialogBook) {
