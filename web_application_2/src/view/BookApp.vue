@@ -14,9 +14,8 @@
      />
     <v-dialog v-model="isShowDialog" max-width="500px">
       <form-template
-        :beforeDialogBook="beforeDialogBook"
+        :isNew="isNew"
         :dialogBook="dialogBook"
-        :insertResult="insertResult"
         @closeDialog="closeDialog"
         @onClickSaveBtn="onClickSaveBtn"
        />
@@ -56,14 +55,13 @@ export default {
         { title: 'もものかんづめ', category: 'エッセイ', purchase_date: '2022-09-10', buyer: '佐藤次郎', review_content: '普通' },
         { title: '王さまロボット', category: 'ファンタジー', purchase_date: '2022-10-10', buyer: '鈴木一郎', review_content: '感動した' }
       ],
-      beforeDialogBook: {},
       dialogBook: { title: '', category: '', purchase_date: '', buyer: '', review_content: '' },
       isShowDialog: false,
       isShowDeleteDialog: false,
       searchTitle: '',
       searchCategory: '',
       isLoading: false,
-      insertResult: ''
+      isNew: false
     }
   },
   mounted () {
@@ -81,7 +79,7 @@ export default {
   },
   methods: {
     onClickEditIcon (dialogBook) {
-      this.beforeDialogBook = dialogBook
+      this.isNew = false
       this.dialogBook = dialogBook
       this.isShowDialog = true
     },
@@ -90,7 +88,7 @@ export default {
       this.isShowDeleteDialog = true
     },
     onClickAddBtn () {
-      this.beforeDialogBook = {}
+      this.isNew = true
       this.dialogBook = {}
       this.isShowDialog = true
     },
@@ -99,28 +97,6 @@ export default {
     },
     closeDeleteDialog () {
       this.isShowDeleteDialog = false
-    },
-    async onClickSaveBtn (dialogBook) {
-      const google = window.google
-      const app = this
-      if (Object.keys(this.beforeDialogBook).length === 0) {
-        await google.script.run.withSuccessHandler(function (result) {
-          if (result === 1) {
-            alert('登録しました。')
-            app.closeDialog()
-          } else {
-            app.insertResult = result
-          }
-        }).withFailureHandler(function () {
-          alert('登録に失敗しました。')
-        }).insertRecord(dialogBook)
-      //  } else {
-      //  await google.script.run.withSuccessHandler(function () {
-      //    alert('更新しました。')
-      //  }).withFailureHandler(function () {
-      //    alert('更新に失敗しました。')
-      //  }).updateRecord(this.beforeDialogBook, dialogBook)
-      }
     },
     onClickDeleteBtn (deleteDialogBook) {
       // await google.script.run.withSuccessHandler(function () {

@@ -8,11 +8,11 @@
         <v-container>
           <v-row>
             <v-col cols="6">
-              <v-text-field v-if="Object.keys(beforeDialogBook).length === 0" v-model="dialogBook.title" label="タイトル" />
+              <v-text-field v-if="isNew == true" v-model="dialogBook.title" label="タイトル" />
               <v-text-field v-else v-model="dialogBook.title" label="タイトル" disabled />
             </v-col>
             <v-col cols="6">
-              <v-text-field v-if="Object.keys(beforeDialogBook).length === 0" v-model="dialogBook.category" label="ジャンル" />
+              <v-text-field v-if="isNew == true" v-model="dialogBook.category" label="ジャンル" />
               <v-text-field v-else v-model="dialogBook.category" label="ジャンル" disabled />
             </v-col>
             <v-col cols="6">
@@ -27,7 +27,7 @@
               >
                 <template #activator="{ on, attrs }" >
                   <v-text-field
-                    v-if="Object.keys(beforeDialogBook).length === 0"
+                    v-if="isNew == true"
                     v-model="dialogBook.purchase_date"
                     label="購入日"
                     prepend-icon="mdi-calendar"
@@ -55,7 +55,7 @@
               </v-menu>
             </v-col>
             <v-col cols="6">
-              <v-text-field v-if="Object.keys(beforeDialogBook).length === 0" v-model="dialogBook.buyer" label="購入者" />
+              <v-text-field v-if="isNew == true" v-model="dialogBook.buyer" label="購入者" />
               <v-text-field v-else v-model="dialogBook.buyer" label="購入者" disabled />
             </v-col>
             <v-col cols="12">
@@ -80,40 +80,48 @@
 <script>
 export default {
   props: [
-    'beforeDialogBook',
-    'dialogBook',
-    'insertResult'
+    'isNew',
+    'dialogBook'
   ],
   data () {
     return {
       menu: false,
-      isShowErrorDialog: false,
-      isShowKeyDuplicateErrorDialog: false,
-      isSaveLoading: false
+      isSaveLoading: false,
+      insertResult: ''
     }
   },
   methods: {
     closeDialog () {
       this.$emit('closeDialog')
     },
-    closeErrorDialog () {
-      this.isShowErrorDialog = false
-    },
-    closeKeyDuplicateErrorDialog () {
-      this.isShowKeyDuplicateErrorDialog = false
-    },
     async onClickSaveBtn () {
       if (!this.dialogBook.title || !this.dialogBook.category ||
           !this.dialogBook.purchase_date || !this.dialogBook.buyer ||
           !this.dialogBook.review_content
       ) {
-        window.alert('未入力項目があります')
+        alert('未入力項目があります')
         return
       }
       this.isSaveLoading = true
-      await this.$emit('onClickSaveBtn', this.dialogBook)
+      const google = window.google
+      const app = this
+      if (this.isNew === true) {
+        const result = await google.script.run.insertRecord(this.dialogBook)
+        if (result === 1) {
+          alert('登録しました。')
+          app.closeDialog()
+        } else {
+          app.insertResult = result
+        }
+      //  } else {
+      //  await google.script.run.withSuccessHandler(function () {
+      //    alert('更新しました。')
+      //  }).withFailureHandler(function () {
+      //    alert('更新に失敗しました。')
+      //  }).updateRecord(dialogBook)
+      }
       if (this.insertResult == null) {
-        window.alert('既に登録済みのデータです')
+        alert('既に登録済みのデータです')
       }
       this.isSaveLoading = false
     }
