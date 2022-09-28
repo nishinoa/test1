@@ -86,15 +86,14 @@ export default {
   data () {
     return {
       menu: false,
-      isSaveLoading: false,
-      insertResult: ''
+      isSaveLoading: false
     }
   },
   methods: {
     closeDialog () {
       this.$emit('closeDialog')
     },
-    async onClickSaveBtn () {
+    onClickSaveBtn () {
       if (!this.dialogBook.title || !this.dialogBook.category ||
           !this.dialogBook.purchase_date || !this.dialogBook.buyer ||
           !this.dialogBook.review_content
@@ -106,22 +105,18 @@ export default {
       const google = window.google
       const app = this
       if (this.isNew === true) {
-        const result = await google.script.run.insertRecord(this.dialogBook)
-        if (result === 1) {
+        google.script.run.withSuccessHandler(function () {
           alert('登録しました。')
           app.closeDialog()
-        } else {
-          app.insertResult = result
-        }
+        }).withFailureHandler(function () {
+          alert('既に登録済みのデータです')
+        }).insertRecord(this.dialogBook)
       //  } else {
       //  await google.script.run.withSuccessHandler(function () {
       //    alert('更新しました。')
       //  }).withFailureHandler(function () {
       //    alert('更新に失敗しました。')
       //  }).updateRecord(dialogBook)
-      }
-      if (this.insertResult == null) {
-        alert('既に登録済みのデータです')
       }
       this.isSaveLoading = false
     }
