@@ -1,10 +1,12 @@
 export default function insertRecord (dialogBook) {
+    let connection;
+    let statement;
     try{
-        const connection = connectDb();
+        connection = connectDb();
         const sql = `INSERT INTO web_book_nishinoa 
                      (title, category, purchase_date, buyer, review_content)
                      values (?, ?, ?, ?, ?)`;
-        const statement = prepareSql(connection,sql);
+        statement = prepareSql(connection,sql);
         statement.setString(1, dialogBook.title);
         statement.setString(2, dialogBook.category);
         statement.setString(3, dialogBook.purchase_date);

@@ -17,7 +17,6 @@
         :isNew="isNew"
         :dialogBook="dialogBook"
         @closeDialog="closeDialog"
-        @onClickSaveBtn="onClickSaveBtn"
        />
     </v-dialog>
     <v-dialog v-model="isShowDeleteDialog" max-width="500px">

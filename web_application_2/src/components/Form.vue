@@ -8,11 +8,11 @@
         <v-container>
           <v-row>
             <v-col cols="6">
-              <v-text-field v-if="isNew == true" v-model="dialogBook.title" label="タイトル" />
+              <v-text-field v-if="isNew" v-model="dialogBook.title" label="タイトル" />
               <v-text-field v-else v-model="dialogBook.title" label="タイトル" disabled />
             </v-col>
             <v-col cols="6">
-              <v-text-field v-if="isNew == true" v-model="dialogBook.category" label="ジャンル" />
+              <v-text-field v-if="isNew" v-model="dialogBook.category" label="ジャンル" />
               <v-text-field v-else v-model="dialogBook.category" label="ジャンル" disabled />
             </v-col>
             <v-col cols="6">
@@ -27,7 +27,7 @@
               >
                 <template #activator="{ on, attrs }" >
                   <v-text-field
-                    v-if="isNew == true"
+                    v-if="isNew"
                     v-model="dialogBook.purchase_date"
                     label="購入日"
                     prepend-icon="mdi-calendar"
@@ -55,7 +55,7 @@
               </v-menu>
             </v-col>
             <v-col cols="6">
-              <v-text-field v-if="isNew == true" v-model="dialogBook.buyer" label="購入者" />
+              <v-text-field v-if="isNew" v-model="dialogBook.buyer" label="購入者" />
               <v-text-field v-else v-model="dialogBook.buyer" label="購入者" disabled />
             </v-col>
             <v-col cols="12">
@@ -104,7 +104,7 @@ export default {
       this.isSaveLoading = true
       const google = window.google
       const app = this
-      if (this.isNew === true) {
+      if (this.isNew) {
         google.script.run.withSuccessHandler(function () {
           alert('登録しました。')
           app.closeDialog()
