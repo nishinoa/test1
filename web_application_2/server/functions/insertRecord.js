@@ -18,8 +18,13 @@ export default function insertRecord (dialogBook) {
         connection.close();
         return result;  
     }catch (e) {
-        statement.close();
-        connection.close();
-        return null;
+        if (e.message.match(/Duplicate/)) {
+          statement.close();
+          connection.close();
+          return null;    
+        } else { 
+          statement.close();
+          connection.close();
+        }
     }
 }

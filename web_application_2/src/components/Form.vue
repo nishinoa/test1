@@ -105,11 +105,15 @@ export default {
       const google = window.google
       const app = this
       if (this.isNew) {
-        google.script.run.withSuccessHandler(function () {
+        google.script.run.withSuccessHandler(function (result) {
+          if (result == null) {
+            alert('既に登録済みのデータです')
+            return
+          }
           alert('登録しました。')
           app.closeDialog()
         }).withFailureHandler(function () {
-          alert('既に登録済みのデータです')
+          alert('DB接続確立エラー')
         }).insertRecord(this.dialogBook)
       //  } else {
       //  await google.script.run.withSuccessHandler(function () {
