@@ -1,5 +1,11 @@
 import doGet from './functions/doGet'
-import sample from './functions/sample'
+import insertRecord from './functions/insertRecord'
+// import updateRecord from './functions/updateRecord'
+import connectDb from './functions/connectDb'
+import prepareSql from './functions/prepareSql'
 
 global.doGet = doGet
-global.sample = sample
+global.insertRecord = insertRecord
+// global.updateRecord = updateRecord
+global.connectDb = connectDb
+global.prepareSql = prepareSql

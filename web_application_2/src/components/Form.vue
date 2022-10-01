@@ -8,10 +8,12 @@
         <v-container>
           <v-row>
             <v-col cols="6">
-              <v-text-field v-model="dialogBook.title" label="タイトル" />
+              <v-text-field v-if="isNew" v-model="dialogBook.title" label="タイトル" />
+              <v-text-field v-else v-model="dialogBook.title" label="タイトル" disabled />
             </v-col>
             <v-col cols="6">
-              <v-text-field v-model="dialogBook.category" label="ジャンル" />
+              <v-text-field v-if="isNew" v-model="dialogBook.category" label="ジャンル" />
+              <v-text-field v-else v-model="dialogBook.category" label="ジャンル" disabled />
             </v-col>
             <v-col cols="6">
               <v-menu
@@ -25,12 +27,22 @@
               >
                 <template #activator="{ on, attrs }" >
                   <v-text-field
+                    v-if="isNew"
                     v-model="dialogBook.purchase_date"
                     label="購入日"
                     prepend-icon="mdi-calendar"
                     readonly
                     v-bind="attrs"
                     v-on="on" />
+                  <v-text-field
+                    v-else
+                    v-model="dialogBook.purchase_date"
+                    label="購入日"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    disabled />
                 </template>
                   <v-date-picker
                     v-model="dialogBook.purchase_date"
@@ -43,7 +55,8 @@
               </v-menu>
             </v-col>
             <v-col cols="6">
-              <v-text-field v-model="dialogBook.buyer" label="購入者" />
+              <v-text-field v-if="isNew" v-model="dialogBook.buyer" label="購入者" />
+              <v-text-field v-else v-model="dialogBook.buyer" label="購入者" disabled />
             </v-col>
             <v-col cols="12">
               <v-text-field v-model="dialogBook.review_content" label="レビュー内容" />
@@ -54,29 +67,62 @@
       <v-card-actions>
         <v-spacer />
         <v-btn @click="closeDialog">閉じる</v-btn>
-        <v-btn @click="onClickInsertUpdateBtn">保存</v-btn>
+        <v-btn @click="onClickSaveBtn">保存</v-btn>
         <v-spacer />
       </v-card-actions>
     </v-card>
+    <v-overlay :value="isSaveLoading">
+      <v-progress-circular indeterminate size="64"/>
+    </v-overlay>
   </div>
 </template>
 
 <script>
 export default {
   props: [
+    'isNew',
     'dialogBook'
   ],
   data () {
     return {
-      menu: false
+      menu: false,
+      isSaveLoading: false
     }
   },
   methods: {
     closeDialog () {
       this.$emit('closeDialog')
     },
-    onClickInsertUpdateBtn () {
-      this.$emit('onClickInsertUpdateBtn', this.dialogBook)
+    onClickSaveBtn () {
+      if (!this.dialogBook.title || !this.dialogBook.category ||
+          !this.dialogBook.purchase_date || !this.dialogBook.buyer ||
+          !this.dialogBook.review_content
+      ) {
+        alert('未入力項目があります')
+        return
+      }
+      this.isSaveLoading = true
+      const google = window.google
+      const app = this
+      if (this.isNew) {
+        google.script.run.withSuccessHandler(function (result) {
+          if (result == null) {
+            alert('既に登録済みのデータです')
+            return
+          }
+          alert('登録しました。')
+          app.closeDialog()
+        }).withFailureHandler(function () {
+          alert('DB接続確立エラー')
+        }).insertRecord(this.dialogBook)
+      //  } else {
+      //  await google.script.run.withSuccessHandler(function () {
+      //    alert('更新しました。')
+      //  }).withFailureHandler(function () {
+      //    alert('更新に失敗しました。')
+      //  }).updateRecord(dialogBook)
+      }
+      this.isSaveLoading = false
     }
   }
 }
