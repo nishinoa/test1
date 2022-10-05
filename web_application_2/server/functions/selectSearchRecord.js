@@ -3,35 +3,26 @@ export default function selectSearchRecord (searchTitle, searchCategory) {
     let statement;
     let results;
     try{
+        connection = connectDb();
+        let sql = `SELECT * FROM web_book_nishinoa `;
         if (searchTitle && searchCategory) {
-          connection = connectDb();
-          const sql = `SELECT *
-                       FROM web_book_nishinoa
-                       WHERE title LIKE ?
-                       and category=?`;
+          sql += `WHERE title LIKE ? and category=?`;
           statement = prepareSql(connection,sql);
           statement.setString(1, '%' + searchTitle + '%');
           statement.setString(2, searchCategory);
-          results = statement.executeQuery();
         } else if (searchTitle && !searchCategory) {
-          connection = connectDb();
-          const sql = `SELECT *
-                       FROM web_book_nishinoa
-                       WHERE title LIKE ?`;
+          sql += `WHERE title LIKE ?`;
           statement = prepareSql(connection,sql);
           statement.setString(1, '%' + searchTitle + '%');
-          results = statement.executeQuery(); 
         } else if (!searchTitle && searchCategory) {
-          connection = connectDb();
-          const sql = `SELECT *
-                       FROM web_book_nishinoa
-                       WHERE category=?`;
+          sql += `WHERE category=?`;
           statement = prepareSql(connection,sql);
-          statement.setString(1, searchCategory);
-          results = statement.executeQuery(); 
+          statement.setString(1, searchCategory); 
         } else {
+          connection.close();
           return selectAllRecord();
         }
+        results = statement.executeQuery();
 
         let bookList = [];
         let book = { title: '', category: '', purchase_date: '', buyer: '', review_content: '' };
