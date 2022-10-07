@@ -25,15 +25,15 @@ export default function selectSearchRecord (searchTitle, searchCategory) {
         results = statement.executeQuery();
 
         let bookList = [];
-        let book = { title: '', category: '', purchase_date: '', buyer: '', review_content: '' };
         while (results.next()) {
+          const book = { title: '', category: '', purchase_date: '', buyer: '', review_content: '' };
           book.title = results.getString('title');
           book.category = results.getString('category');
           book.purchase_date = results.getString('purchase_date');
           book.buyer = results.getString('buyer');
           book.review_content = results.getString('review_content');
           
-          bookList.push(JSON.parse(JSON.stringify(book)));
+          bookList.push(book);
         }
 
         results.close();

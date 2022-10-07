@@ -59,11 +59,11 @@ export default {
       isNew: false
     }
   },
-  mounted () {
+  async mounted () {
     this.isLoading = true
     const google = window.google
     const app = this
-    google.script.run.withSuccessHandler(function (result) {
+    await google.script.run.withSuccessHandler(function (result) {
       app.bookList = result
     }).withFailureHandler(function () {
       alert('DB接続確立エラー')
@@ -99,11 +99,11 @@ export default {
       // }).DeleteRecord(deleteDialogBook)
       this.closeDeleteDialog()
     },
-    onClickSearchBtn (searchTitle, searchCategory) {
+    async onClickSearchBtn (searchTitle, searchCategory) {
       this.isLoading = true
       const google = window.google
       const app = this
-      google.script.run.withSuccessHandler(function (result) {
+      await google.script.run.withSuccessHandler(function (result) {
         app.bookList = result
       }).withFailureHandler(function () {
         alert('DB接続確立エラー')
