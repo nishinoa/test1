@@ -5,22 +5,23 @@ export default function selectSearchRecord (searchTitle, searchCategory) {
     try{
         connection = connectDb();
         let sql = `SELECT * FROM web_book_nishinoa `;
-        if (searchTitle && searchCategory) {
-          sql += `WHERE title LIKE ? and category=?`;
-          statement = prepareSql(connection,sql);
-          statement.setString(1, '%' + searchTitle + '%');
-          statement.setString(2, searchCategory);
-        } else if (searchTitle && !searchCategory) {
+        if (!searchTitle && !searchCategory) {
+          connection.close();
+          return selectAllRecord();
+        } else if (searchTitle) {
           sql += `WHERE title LIKE ?`;
           statement = prepareSql(connection,sql);
           statement.setString(1, '%' + searchTitle + '%');
-        } else if (!searchTitle && searchCategory) {
+          if (searchCategory) {
+            sql += ` and category=?`;
+            statement = prepareSql(connection,sql);
+            statement.setString(1, '%' + searchTitle + '%');
+            statement.setString(2, searchCategory);
+          }
+        } else if (searchCategory) {
           sql += `WHERE category=?`;
           statement = prepareSql(connection,sql);
           statement.setString(1, searchCategory); 
-        } else {
-          connection.close();
-          return selectAllRecord();
         }
         results = statement.executeQuery();
 

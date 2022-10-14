@@ -61,13 +61,8 @@ export default {
   },
   async mounted () {
     this.isLoading = true
-    const google = window.google
-    const app = this
-    await google.script.run.withSuccessHandler(function (result) {
-      app.bookList = result
-    }).withFailureHandler(function () {
-      alert('DB接続確立エラー')
-    }).selectAllRecord()
+    const result = await this.promiseSelectAllRecord()
+    this.bookList = result
     this.isLoading = false
   },
   methods: {
@@ -101,14 +96,33 @@ export default {
     },
     async onClickSearchBtn (searchTitle, searchCategory) {
       this.isLoading = true
+      const result = await this.promiseSelectSearchRecord(searchTitle, searchCategory)
+      this.bookList = result
+      this.isLoading = false
+    },
+    promiseSelectSearchRecord (searchTitle, searchCategory) {
       const google = window.google
       const app = this
-      await google.script.run.withSuccessHandler(function (result) {
-        app.bookList = result
-      }).withFailureHandler(function () {
-        alert('DB接続確立エラー')
-      }).selectSearchRecord(searchTitle, searchCategory)
-      this.isLoading = false
+      return new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler((result) => resolve(result))
+          .withFailureHandler(function () {
+            alert('DB接続確立エラー')
+            app.isLoading = false
+          }).selectSearchRecord(searchTitle, searchCategory)
+      })
+    },
+    promiseSelectAllRecord () {
+      const google = window.google
+      const app = this
+      return new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler((result) => resolve(result))
+          .withFailureHandler(function () {
+            alert('DB接続確立エラー')
+            app.isLoading = false
+          }).selectAllRecord()
+      })
     }
   }
 }

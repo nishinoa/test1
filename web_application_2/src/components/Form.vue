@@ -93,7 +93,7 @@ export default {
     closeDialog () {
       this.$emit('closeDialog')
     },
-    onClickSaveBtn () {
+    async onClickSaveBtn () {
       if (!this.dialogBook.title || !this.dialogBook.category ||
           !this.dialogBook.purchase_date || !this.dialogBook.buyer ||
           !this.dialogBook.review_content
@@ -102,19 +102,15 @@ export default {
         return
       }
       this.isSaveLoading = true
-      const google = window.google
-      const app = this
       if (this.isNew) {
-        google.script.run.withSuccessHandler(function (result) {
-          if (result == null) {
-            alert('既に登録済みのデータです')
-            return
-          }
-          alert('登録しました。')
-          app.closeDialog()
-        }).withFailureHandler(function () {
-          alert('DB接続確立エラー')
-        }).insertRecord(this.dialogBook)
+        const result = await this.promiseInsertRecord()
+        if (result == null) {
+          alert('既に登録済みのデータです')
+          this.isSaveLoading = false
+          return
+        }
+        alert('登録しました。')
+        this.closeDialog()
       //  } else {
       //  await google.script.run.withSuccessHandler(function () {
       //    alert('更新しました。')
@@ -123,6 +119,18 @@ export default {
       //  }).updateRecord(dialogBook)
       }
       this.isSaveLoading = false
+    },
+    promiseInsertRecord () {
+      const google = window.google
+      const app = this
+      return new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler((result) => resolve(result))
+          .withFailureHandler(function () {
+            alert('DB接続確立エラー')
+            app.isSaveLoading = false
+          }).insertRecord(this.dialogBook)
+      })
     }
   }
 }
