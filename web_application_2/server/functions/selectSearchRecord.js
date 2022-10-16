@@ -8,21 +8,28 @@ export default function selectSearchRecord (searchTitle, searchCategory) {
         if (!searchTitle && !searchCategory) {
           connection.close();
           return selectAllRecord();
-        } else if (searchTitle) {
-          sql += `WHERE title LIKE ?`;
-          statement = prepareSql(connection,sql);
-          statement.setString(1, '%' + searchTitle + '%');
-          if (searchCategory) {
-            sql += ` and category=?`;
-            statement = prepareSql(connection,sql);
-            statement.setString(1, '%' + searchTitle + '%');
-            statement.setString(2, searchCategory);
-          }
-        } else if (searchCategory) {
-          sql += `WHERE category=?`;
-          statement = prepareSql(connection,sql);
-          statement.setString(1, searchCategory); 
         }
+
+        if (searchTitle) {
+          sql += `WHERE title LIKE ?`;
+        }
+        if (searchTitle && searchCategory) {
+          sql += ` and category=?`;
+        } else if (!searchTitle && searchCategory) {
+          sql += `WHERE category=?`;
+        }
+
+        statement = prepareSql(connection,sql);
+
+        if (searchTitle) {
+          statement.setString(1, '%' + searchTitle + '%');
+        }
+        if (searchTitle && searchCategory) {
+          statement.setString(2, searchCategory);
+        } else if (!searchTitle && searchCategory) {
+          statement.setString(1, searchCategory);
+        }
+        
         results = statement.executeQuery();
 
         let bookList = [];
