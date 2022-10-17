@@ -3,13 +3,12 @@ export default function selectSearchRecord (searchTitle, searchCategory) {
     let statement;
     let results;
     try{
-        connection = connectDb();
-        let sql = `SELECT * FROM web_book_nishinoa `;
         if (!searchTitle && !searchCategory) {
-          connection.close();
           return selectAllRecord();
         }
 
+        connection = connectDb();
+        let sql = `SELECT * FROM web_book_nishinoa `;
         if (searchTitle) {
           sql += `WHERE title LIKE ?`;
         }
