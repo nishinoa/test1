@@ -1,17 +1,24 @@
-// export default function updateRecord (dialogBook) {
-//    const book = dialogBook;
-//    const connection = connectDb();
-//    const sql = `UPDATE web_book_nishinoa
-//                 SET review_content=?
-//                 WHERE title=? and category=? and purchase_date=? and buyer=?`;
-//    const statement = executeSql(connection,sql);
-//    statement.setString(1, book.title);
-//    statement.setString(2, book.category);
-//    statement.setString(3, book.purchase_date);
-//    statement.setString(4, book.buyer);
-//    statement.setString(5, book.review_content);
-//    statement.executeUpdate();
+export default function updateRecord (dialogBook) {
+    let connection;
+    let statement;
+    try{
+        connection = connectDb();
+        const sql = `UPDATE web_book_nishinoa
+                 SET review_content=?
+                 WHERE title=? and category=? and purchase_date=? and buyer=?`;
+        statement = prepareSql(connection,sql);
+        statement.setString(1, dialogBook.review_content);
+        statement.setString(2, dialogBook.title);
+        statement.setString(3, dialogBook.category);
+        statement.setString(4, dialogBook.purchase_date);
+        statement.setString(5, dialogBook.buyer);
+        const result = statement.executeUpdate();
     
-//    statement.close();
-//    connection.close();  
-// }
+        statement.close();
+        connection.close();
+        return result;  
+    }catch (e) {
+        statement.close();
+        connection.close();
+    }
+}
