@@ -49,11 +49,7 @@ export default {
   },
   data () {
     return {
-      bookList: [
-        { title: '今夜は眠れない', category: 'ミステリー', purchase_date: '2022-08-10', buyer: '山田太郎', review_content: '面白い' },
-        { title: 'もものかんづめ', category: 'エッセイ', purchase_date: '2022-09-10', buyer: '佐藤次郎', review_content: '普通' },
-        { title: '王さまロボット', category: 'ファンタジー', purchase_date: '2022-10-10', buyer: '鈴木一郎', review_content: '感動した' }
-      ],
+      bookList: [],
       dialogBook: { title: '', category: '', purchase_date: '', buyer: '', review_content: '' },
       isShowDialog: false,
       isShowDeleteDialog: false,
@@ -63,17 +59,10 @@ export default {
       isNew: false
     }
   },
-  mounted () {
+  async mounted () {
     this.isLoading = true
-    // await google.script.run.withSuccessHandler(function(result) {
-    //  if (result == null){
-    //    app.bookList = []
-    //  } else {
-    //    app.bookList = result
-    //  }
-    // }).withFailureHandler(function(){
-    //    alert("データを取得出来ません。")
-    // }).selectAllRecord()
+    const result = await this.promiseSelectAllRecord()
+    this.bookList = result
     this.isLoading = false
   },
   methods: {
@@ -105,12 +94,35 @@ export default {
       // }).DeleteRecord(deleteDialogBook)
       this.closeDeleteDialog()
     },
-    onClickSearchBtn (searchTitle, searchCategory) {
-      // await google.script.run.withSuccessHandler(function () {
-      //  alert('更新しました。')
-      // }).withFailureHandler(function () {
-      //  alert('検索に失敗しました。')
-      // }).selectRecord(searchTitle, searchCategory)
+    async onClickSearchBtn (searchTitle, searchCategory) {
+      this.isLoading = true
+      const result = await this.promiseSelectSearchRecord(searchTitle, searchCategory)
+      this.bookList = result
+      this.isLoading = false
+    },
+    promiseSelectSearchRecord (searchTitle, searchCategory) {
+      const google = window.google
+      const app = this
+      return new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler((result) => resolve(result))
+          .withFailureHandler(function () {
+            alert('DB接続確立エラー')
+            app.isLoading = false
+          }).selectSearchRecord(searchTitle, searchCategory)
+      })
+    },
+    promiseSelectAllRecord () {
+      const google = window.google
+      const app = this
+      return new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler((result) => resolve(result))
+          .withFailureHandler(function () {
+            alert('DB接続確立エラー')
+            app.isLoading = false
+          }).selectAllRecord()
+      })
     }
   }
 }
