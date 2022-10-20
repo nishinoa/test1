@@ -110,12 +110,11 @@ export default {
           return
         }
         alert('登録しました。')
-        this.closeDialog()
       } else {
         await this.promiseUpdateRecord()
         alert('更新しました。')
-        this.closeDialog()
       }
+      this.closeDialog()
       this.isSaveLoading = false
     },
     promiseInsertRecord () {
