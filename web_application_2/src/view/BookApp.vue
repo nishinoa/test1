@@ -86,13 +86,12 @@ export default {
     closeDeleteDialog () {
       this.isShowDeleteDialog = false
     },
-    onClickDeleteBtn (deleteDialogBook) {
-      // await google.script.run.withSuccessHandler(function () {
-      //  alert('削除しました。')
-      // }).withFailureHandler(function () {
-      //  alert('削除に失敗しました。')
-      // }).DeleteRecord(deleteDialogBook)
+    async onClickDeleteBtn () {
+      this.isLoading = true
+      await this.promiseDeleteRecord()
+      alert('削除しました。')
       this.closeDeleteDialog()
+      this.isLoading = false
     },
     async onClickSearchBtn (searchTitle, searchCategory) {
       this.isLoading = true
@@ -122,6 +121,18 @@ export default {
             alert('DB接続確立エラー')
             app.isLoading = false
           }).selectAllRecord()
+      })
+    },
+    promiseDeleteRecord () {
+      const google = window.google
+      const app = this
+      return new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler((result) => resolve(result))
+          .withFailureHandler(function () {
+            alert('DB接続確立エラー')
+            app.isLoading = false
+          }).deleteRecord(this.dialogBook)
       })
     }
   }
