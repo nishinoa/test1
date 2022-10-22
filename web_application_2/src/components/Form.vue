@@ -110,14 +110,11 @@ export default {
           return
         }
         alert('登録しました。')
-        this.closeDialog()
-      //  } else {
-      //  await google.script.run.withSuccessHandler(function () {
-      //    alert('更新しました。')
-      //  }).withFailureHandler(function () {
-      //    alert('更新に失敗しました。')
-      //  }).updateRecord(dialogBook)
+      } else {
+        await this.promiseUpdateRecord()
+        alert('更新しました。')
       }
+      this.closeDialog()
       this.isSaveLoading = false
     },
     promiseInsertRecord () {
@@ -130,6 +127,18 @@ export default {
             alert('DB接続確立エラー')
             app.isSaveLoading = false
           }).insertRecord(this.dialogBook)
+      })
+    },
+    promiseUpdateRecord () {
+      const google = window.google
+      const app = this
+      return new Promise((resolve) => {
+        google.script.run
+          .withSuccessHandler((result) => resolve(result))
+          .withFailureHandler(function () {
+            alert('DB接続確立エラー')
+            app.isSaveLoading = false
+          }).updateRecord(this.dialogBook)
       })
     }
   }
