@@ -1,0 +1,5 @@
+CREATE TABLE web_task_nishinoa(
+	name VARCHAR(30) not null,
+	status boolean not null,
+	primary key(name)
+);
