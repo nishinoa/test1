@@ -1,17 +1,15 @@
-export default function updateRecord (dialogBook) {
+export default function deleteRecord (dialogBook) {
     let connection;
     let statement;
     try{
         connection = connectDb();
-        const sql = `UPDATE web_book_nishinoa
-                     SET review_content=?
+        const sql = `DELETE FROM web_book_nishinoa
                      WHERE title=? and category=? and purchase_date=? and buyer=?`;
         statement = prepareSql(connection,sql);
-        statement.setString(1, dialogBook.review_content);
-        statement.setString(2, dialogBook.title);
-        statement.setString(3, dialogBook.category);
-        statement.setString(4, dialogBook.purchase_date);
-        statement.setString(5, dialogBook.buyer);
+        statement.setString(1, dialogBook.title);
+        statement.setString(2, dialogBook.category);
+        statement.setString(3, dialogBook.purchase_date);
+        statement.setString(4, dialogBook.buyer);
         const result = statement.executeUpdate();
     
         statement.close();
