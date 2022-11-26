@@ -6,7 +6,7 @@
       color="primary"
     >
       <v-toolbar-title>
-        書籍管理アプリ
+        タスク管理アプリ
       </v-toolbar-title>
     </v-app-bar>
     <v-main>
