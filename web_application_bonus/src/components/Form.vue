@@ -8,8 +8,8 @@
         <v-container>
           <v-row>
             <v-col cols="6">
-              <v-text-field v-if="isNew" v-model="dialogTask.name" label="タイトル名" />
-              <v-text-field v-else v-model="dialogTask.name" label="タイトル名" disabled />
+              <v-text-field v-if="isNew" v-model="dialogTask.name" label="タスク名" />
+              <v-text-field v-else v-model="dialogTask.name" label="タスク名" disabled />
             </v-col>
             <v-col cols="6">
               <v-combobox
