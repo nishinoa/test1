@@ -8,13 +8,13 @@
         <v-container>
           <v-row>
             <v-col cols="6">
-              <v-text-field v-if="isNew" v-model="dialogTask.name" label="タスク名" />
-              <v-text-field v-else v-model="dialogTask.name" label="タスク名" disabled />
+              <v-text-field v-if="isNew" v-model="getName" label="タスク名" />
+              <v-text-field v-else v-model="getName" label="タスク名" disabled />
             </v-col>
             <v-col cols="6">
               <v-combobox
-                v-model="dialogTask.status"
-                :items="items"
+                v-model="getStatus"
+                :items="statusList"
                 label="タスク状態"
               />
             </v-col>
@@ -43,16 +43,30 @@ export default {
   data () {
     return {
       isSaveLoading: false,
-      items: ['完了', '未完了']
+      statusList: ['完了', '未完了'],
+      formTask: { name: '', status: '' }
+    }
+  },
+  computed: {
+    getName () {
+      this.setTask()
+      return this.formTask.name
+    },
+    getStatus () {
+      this.setTask()
+      return this.formTask.status
     }
   },
   methods: {
     closeDialog () {
       this.$emit('closeDialog')
+    },
+    setTask () {
+      this.formTask = this.dialogTask
     }
     // async onClickSaveBtn () {
-    //   if (!this.dialogTask.name ||
-    //       !this.dialogTask.status
+    //   if (!this.formTask.name ||
+    //       !this.formTask.status
     //   ) {
     //     alert('未入力項目があります')
     //     return
@@ -82,7 +96,7 @@ export default {
     //       .withFailureHandler(function () {
     //         alert('DB接続確立エラー')
     //         app.isSaveLoading = false
-    //       }).insertRecord(this.dialogTask)
+    //       }).insertRecord(this.formTask)
     //   })
     // },
     // promiseUpdateRecord () {
@@ -94,7 +108,7 @@ export default {
     //       .withFailureHandler(function () {
     //         alert('DB接続確立エラー')
     //         app.isSaveLoading = false
-    //       }).updateRecord(this.dialogTask)
+    //       }).updateRecord(this.formTask)
     //   })
     // }
   }

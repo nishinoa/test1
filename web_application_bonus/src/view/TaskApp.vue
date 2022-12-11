@@ -19,15 +19,10 @@
        />
     </v-dialog>
     <v-dialog v-model="isShowDeleteDialog" max-width="500px">
-     <v-card>
-       <v-card-title class="text-h5">削除しますか?</v-card-title>
-       <v-card-actions>
-         <v-spacer />
-         <v-btn @click="closeDeleteDialog">キャンセル</v-btn>
-         <v-btn @click="onClickDeleteBtn">削除</v-btn>
-         <v-spacer />
-       </v-card-actions>
-     </v-card>
+      <delete-template
+        :dialogTask="dialogTask"
+        @closeDeleteDialog="closeDeleteDialog"
+       />
     </v-dialog>
     <v-overlay :value="isLoading">
       <v-progress-circular indeterminate size="64"/>
@@ -36,12 +31,14 @@
 </template>
 
 <script>
+import Delete from '../components/Delete'
 import Form from '../components/Form'
 import List from '../components/List'
 import Search from '../components/Search'
 
 export default {
   components: {
+    'delete-template': Delete,
     'form-template': Form,
     'list-template': List,
     'search-template': Search
@@ -58,7 +55,6 @@ export default {
       dialogTask: { name: '', status: '' },
       isShowDialog: false,
       isShowDeleteDialog: false,
-      searchCategory: '',
       isLoading: false,
       isNew: false
     }
@@ -90,13 +86,6 @@ export default {
     closeDeleteDialog () {
       this.isShowDeleteDialog = false
     }
-    // async onClickDeleteBtn () {
-    //   this.isLoading = true
-    //   await this.promiseDeleteRecord()
-    //   alert('削除しました。')
-    //   this.closeDeleteDialog()
-    //   this.isLoading = false
-    // },
     // async onClickSearchBtn (searchStatus) {
     //   this.isLoading = true
     //   const result = await this.promiseSelectSearchRecord(searchStatus)
@@ -125,18 +114,6 @@ export default {
     //         alert('DB接続確立エラー')
     //         app.isLoading = false
     //       }).selectAllRecord()
-    //   })
-    // },
-    // promiseDeleteRecord () {
-    //   const google = window.google
-    //   const app = this
-    //   return new Promise((resolve) => {
-    //     google.script.run
-    //       .withSuccessHandler((result) => resolve(result))
-    //       .withFailureHandler(function () {
-    //         alert('DB接続確立エラー')
-    //         app.isLoading = false
-    //       }).deleteRecord(this.dialogTask)
     //   })
     // }
   }
